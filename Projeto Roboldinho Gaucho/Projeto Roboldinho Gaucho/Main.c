@@ -54,6 +54,10 @@
 struct motorInfo motor1Info;
 struct motorInfo motor2Info;
 
+ISR(TIMER0_COMPA_vect);
+ISR(TIMER0_COMPB_vect);
+ISR(TIMER0_OVF_vect);
+
 int main(void)
 {
 	// Configuração dos motores
@@ -62,15 +66,39 @@ int main(void)
 	
 	// Configuração do Timer0 - 1kHz
 	timer0FastPWMMaxMode();
-	timer0SetCompareAValue(0);
-	timer0SetCompareBValue(0);
+	timer0ClockPrescaller8();
+	timer0OC0ANonInvertedMode();
+	timer0OC0BNonInvertedMode();
+	timer0SetCompareAValue(127);
+	timer0SetCompareBValue(127);
+	timer0ActivateCompareAInterrupt();
+	timer0ActivateCompareBInterrupt();
+	timer0ActivateOverflowInterrupt();
 	
 	// Configuração do Timer1
 	
 	// Configuração do Timer2
 	
+	sei();
+	
     while(1)
     {
-        //TODO:: Please write your application code 
+		
     }
+}
+
+
+ISR(TIMER0_COMPA_vect)
+{
+	
+}
+
+ISR(TIMER0_COMPB_vect)
+{
+	
+}
+
+ISR(TIMER0_OVF_vect)
+{
+	
 }

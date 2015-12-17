@@ -3,25 +3,25 @@ Projeto Roboldinho Gaucho.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000e4  00000000  00000000  00000054  2**1
+  0 .text         00000166  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .comment      00000030  00000000  00000000  00000138  2**0
+  1 .comment      00000030  00000000  00000000  000001ba  2**0
                   CONTENTS, READONLY
-  2 .debug_aranges 00000048  00000000  00000000  00000168  2**0
+  2 .debug_aranges 00000060  00000000  00000000  000001ea  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   00000261  00000000  00000000  000001b0  2**0
+  3 .debug_info   00000332  00000000  00000000  0000024a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 0000012b  00000000  00000000  00000411  2**0
+  4 .debug_abbrev 00000174  00000000  00000000  0000057c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   0000010c  00000000  00000000  0000053c  2**0
+  5 .debug_line   00000178  00000000  00000000  000006f0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  00000058  00000000  00000000  00000648  2**2
+  6 .debug_frame  000000ac  00000000  00000000  00000868  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    000001ec  00000000  00000000  000006a0  2**0
+  7 .debug_str    00000284  00000000  00000000  00000914  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    0000019e  00000000  00000000  0000088c  2**0
+  8 .debug_loc    0000022b  00000000  00000000  00000b98  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000028  00000000  00000000  00000a2a  2**0
+  9 .debug_ranges 00000040  00000000  00000000  00000dc3  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -41,9 +41,9 @@ Disassembly of section .text:
   2c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   30:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   34:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-  38:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-  3c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-  40:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
+  38:	0c 94 91 00 	jmp	0x122	; 0x122 <__vector_14>
+  3c:	0c 94 9b 00 	jmp	0x136	; 0x136 <__vector_15>
+  40:	0c 94 a5 00 	jmp	0x14a	; 0x14a <__vector_16>
   44:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   48:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   4c:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
@@ -66,8 +66,8 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e4 ee       	ldi	r30, 0xE4	; 228
-  7c:	f0 e0       	ldi	r31, 0x00	; 0
+  7a:	e6 e6       	ldi	r30, 0x66	; 102
+  7c:	f1 e0       	ldi	r31, 0x01	; 1
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
@@ -89,13 +89,13 @@ Disassembly of section .text:
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 53 00 	call	0xa6	; 0xa6 <main>
-  9e:	0c 94 70 00 	jmp	0xe0	; 0xe0 <_exit>
+  9e:	0c 94 b1 00 	jmp	0x162	; 0x162 <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000a6 <main>:
-// Definição das Variaveis Globais
+ISR(TIMER0_OVF_vect);
 
 int main(void)
 {
@@ -103,51 +103,156 @@ int main(void)
 	motorCtrlCfg(MOTOR_CONTROL_DDR, MOTOR_CONTROL_PORT, MOTOR1_CONTROL_PWM_PIN, MOTOR2_CONTROL_PWM_PIN);
   a6:	6b b1       	in	r22, 0x0b	; 11
   a8:	8a b1       	in	r24, 0x0a	; 10
-  aa:	70 e0       	ldi	r23, 0x00	; 0
-  ac:	26 e0       	ldi	r18, 0x06	; 6
-  ae:	30 e0       	ldi	r19, 0x00	; 0
-  b0:	45 e0       	ldi	r20, 0x05	; 5
-  b2:	50 e0       	ldi	r21, 0x00	; 0
-  b4:	90 e0       	ldi	r25, 0x00	; 0
-  b6:	0e 94 6e 00 	call	0xdc	; 0xdc <motorCtrlCfg>
+  aa:	26 e0       	ldi	r18, 0x06	; 6
+  ac:	45 e0       	ldi	r20, 0x05	; 5
+  ae:	0e 94 af 00 	call	0x15e	; 0x15e <motorCtrlCfg>
 	motorDataCfg(MOTOR_CONTROL_DDR, MOTOR_CONTROL_PORT, MOTOR1_DATA_E0_PIN, MOTOR1_DATA_E1_PIN, MOTOR2_DATA_E0_PIN, MOTOR2_DATA_E1_PIN);
-  ba:	6b b1       	in	r22, 0x0b	; 11
-  bc:	8a b1       	in	r24, 0x0a	; 10
-  be:	70 e0       	ldi	r23, 0x00	; 0
-  c0:	68 94       	set
-  c2:	ee 24       	eor	r14, r14
-  c4:	e2 f8       	bld	r14, 2
-  c6:	f1 2c       	mov	r15, r1
-  c8:	02 e0       	ldi	r16, 0x02	; 2
-  ca:	10 e0       	ldi	r17, 0x00	; 0
-  cc:	21 e0       	ldi	r18, 0x01	; 1
-  ce:	30 e0       	ldi	r19, 0x00	; 0
-  d0:	40 e0       	ldi	r20, 0x00	; 0
-  d2:	50 e0       	ldi	r21, 0x00	; 0
-  d4:	90 e0       	ldi	r25, 0x00	; 0
-  d6:	0e 94 6f 00 	call	0xde	; 0xde <motorDataCfg>
-  da:	ff cf       	rjmp	.-2      	; 0xda <main+0x34>
+  b2:	6b b1       	in	r22, 0x0b	; 11
+  b4:	8a b1       	in	r24, 0x0a	; 10
+  b6:	68 94       	set
+  b8:	ee 24       	eor	r14, r14
+  ba:	e2 f8       	bld	r14, 2
+  bc:	02 e0       	ldi	r16, 0x02	; 2
+  be:	21 e0       	ldi	r18, 0x01	; 1
+  c0:	40 e0       	ldi	r20, 0x00	; 0
+  c2:	0e 94 b0 00 	call	0x160	; 0x160 <motorDataCfg>
+	
+	// Configuração do Timer0 - 1kHz
+	timer0FastPWMMaxMode();
+  c6:	85 b5       	in	r24, 0x25	; 37
+  c8:	87 7f       	andi	r24, 0xF7	; 247
+  ca:	85 bd       	out	0x25, r24	; 37
+  cc:	84 b5       	in	r24, 0x24	; 36
+  ce:	82 60       	ori	r24, 0x02	; 2
+  d0:	84 bd       	out	0x24, r24	; 36
+  d2:	84 b5       	in	r24, 0x24	; 36
+  d4:	81 60       	ori	r24, 0x01	; 1
+  d6:	84 bd       	out	0x24, r24	; 36
+	timer0ClockPrescaller8();
+  d8:	85 b5       	in	r24, 0x25	; 37
+  da:	8b 7f       	andi	r24, 0xFB	; 251
+  dc:	85 bd       	out	0x25, r24	; 37
+  de:	85 b5       	in	r24, 0x25	; 37
+  e0:	82 60       	ori	r24, 0x02	; 2
+  e2:	85 bd       	out	0x25, r24	; 37
+  e4:	85 b5       	in	r24, 0x25	; 37
+  e6:	8e 7f       	andi	r24, 0xFE	; 254
+  e8:	85 bd       	out	0x25, r24	; 37
+	timer0OC0ANonInvertedMode();
+  ea:	84 b5       	in	r24, 0x24	; 36
+  ec:	80 68       	ori	r24, 0x80	; 128
+  ee:	84 bd       	out	0x24, r24	; 36
+  f0:	84 b5       	in	r24, 0x24	; 36
+  f2:	8f 7b       	andi	r24, 0xBF	; 191
+  f4:	84 bd       	out	0x24, r24	; 36
+	timer0OC0BNonInvertedMode();
+  f6:	84 b5       	in	r24, 0x24	; 36
+  f8:	80 62       	ori	r24, 0x20	; 32
+  fa:	84 bd       	out	0x24, r24	; 36
+  fc:	84 b5       	in	r24, 0x24	; 36
+  fe:	8f 7e       	andi	r24, 0xEF	; 239
+ 100:	84 bd       	out	0x24, r24	; 36
+	timer0SetCompareAValue(127);
+ 102:	8f e7       	ldi	r24, 0x7F	; 127
+ 104:	87 bd       	out	0x27, r24	; 39
+	timer0SetCompareBValue(127);
+ 106:	88 bd       	out	0x28, r24	; 40
+	timer0ActivateCompareAInterrupt();
+ 108:	ee e6       	ldi	r30, 0x6E	; 110
+ 10a:	f0 e0       	ldi	r31, 0x00	; 0
+ 10c:	80 81       	ld	r24, Z
+ 10e:	82 60       	ori	r24, 0x02	; 2
+ 110:	80 83       	st	Z, r24
+	timer0ActivateCompareBInterrupt();
+ 112:	80 81       	ld	r24, Z
+ 114:	84 60       	ori	r24, 0x04	; 4
+ 116:	80 83       	st	Z, r24
+	timer0ActivateOverflowInterrupt();
+ 118:	80 81       	ld	r24, Z
+ 11a:	81 60       	ori	r24, 0x01	; 1
+ 11c:	80 83       	st	Z, r24
+	
+	// Configuração do Timer1
+	
+	// Configuração do Timer2
+	
+	sei();
+ 11e:	78 94       	sei
+ 120:	ff cf       	rjmp	.-2      	; 0x120 <main+0x7a>
 
-000000dc <motorCtrlCfg>:
+00000122 <__vector_14>:
+    }
+}
+
+
+ISR(TIMER0_COMPA_vect)
+{
+ 122:	1f 92       	push	r1
+ 124:	0f 92       	push	r0
+ 126:	0f b6       	in	r0, 0x3f	; 63
+ 128:	0f 92       	push	r0
+ 12a:	11 24       	eor	r1, r1
+	
+}
+ 12c:	0f 90       	pop	r0
+ 12e:	0f be       	out	0x3f, r0	; 63
+ 130:	0f 90       	pop	r0
+ 132:	1f 90       	pop	r1
+ 134:	18 95       	reti
+
+00000136 <__vector_15>:
+
+ISR(TIMER0_COMPB_vect)
+{
+ 136:	1f 92       	push	r1
+ 138:	0f 92       	push	r0
+ 13a:	0f b6       	in	r0, 0x3f	; 63
+ 13c:	0f 92       	push	r0
+ 13e:	11 24       	eor	r1, r1
+	
+}
+ 140:	0f 90       	pop	r0
+ 142:	0f be       	out	0x3f, r0	; 63
+ 144:	0f 90       	pop	r0
+ 146:	1f 90       	pop	r1
+ 148:	18 95       	reti
+
+0000014a <__vector_16>:
+
+ISR(TIMER0_OVF_vect)
+{
+ 14a:	1f 92       	push	r1
+ 14c:	0f 92       	push	r0
+ 14e:	0f b6       	in	r0, 0x3f	; 63
+ 150:	0f 92       	push	r0
+ 152:	11 24       	eor	r1, r1
+	
+ 154:	0f 90       	pop	r0
+ 156:	0f be       	out	0x3f, r0	; 63
+ 158:	0f 90       	pop	r0
+ 15a:	1f 90       	pop	r1
+ 15c:	18 95       	reti
+
+0000015e <motorCtrlCfg>:
  */ 
 
 #include "Motor.h"
 
 void motorCtrlCfg(uint8 motorDDR, uint8 motorPort,uint8 motorPWM1,uint8 motorPWM2)
 {
-  dc:	08 95       	ret
+ 15e:	08 95       	ret
 
-000000de <motorDataCfg>:
+00000160 <motorDataCfg>:
 	clrBit(motorPort, motorPWM1);
 	clrBit(motorPort, motorPWM2);
 }
 
 void motorDataCfg(uint8 motorDDR, uint8 motorPort,uint8 motor1Encoder0,uint8 motor1Encoder1,uint8 motor2Encoder0,uint8 motor2Encoder2)
 {
-  de:	08 95       	ret
+ 160:	08 95       	ret
 
-000000e0 <_exit>:
-  e0:	f8 94       	cli
+00000162 <_exit>:
+ 162:	f8 94       	cli
 
-000000e2 <__stop_program>:
-  e2:	ff cf       	rjmp	.-2      	; 0xe2 <__stop_program>
+00000164 <__stop_program>:
+ 164:	ff cf       	rjmp	.-2      	; 0x164 <__stop_program>

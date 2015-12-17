@@ -13,6 +13,7 @@
 #include "LS/LS_defines.h"
 #include "LS/LS_ATmega328.h"
 
+
 typedef struct motorInfo
 {
 	uint16	anguloAtual;
@@ -24,6 +25,11 @@ typedef struct motorInfo
 	
 	uint8	direcao;
 	uint8	velocidade;		
-};
+}motorInfo;
+
+void motorCtrlCfg(uint8 motorDDR, uint8 motorPort,uint8 motorPWM1,uint8 motorPWM2);
+void motorDataCfg(uint8 motorDDR, uint8 motorPort,uint8 motor1Encoder0,uint8 motor1Encoder1,uint8 motor2Encoder0,uint8 motor2Encoder2);
+
+
 
 #endif /* INCFILE1_H_ */
