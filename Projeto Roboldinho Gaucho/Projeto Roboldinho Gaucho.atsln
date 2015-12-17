@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Projeto Roboldinho Gaucho", "Projeto Roboldinho Gaucho\Projeto Roboldinho Gaucho.cproj", "{0C6C63AC-F1BB-4454-A508-AC3DE9D77D80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C6C63AC-F1BB-4454-A508-AC3DE9D77D80}.Debug|AVR.ActiveCfg = Debug|AVR
+		{0C6C63AC-F1BB-4454-A508-AC3DE9D77D80}.Debug|AVR.Build.0 = Debug|AVR
+		{0C6C63AC-F1BB-4454-A508-AC3DE9D77D80}.Release|AVR.ActiveCfg = Release|AVR
+		{0C6C63AC-F1BB-4454-A508-AC3DE9D77D80}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
