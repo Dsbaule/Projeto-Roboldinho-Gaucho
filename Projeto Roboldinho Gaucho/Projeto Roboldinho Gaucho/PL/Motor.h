@@ -27,8 +27,8 @@ typedef struct motorInfo
 	uint8	velocidade;		
 }motorInfo;
 
-void motorCtrlCfg(uint8 motorDDR, uint8 motorPort,uint8 motorPWM1,uint8 motorPWM2);
-void motorDataCfg(uint8 motorDDR, uint8 motorPort,uint8 motor1Encoder0,uint8 motor1Encoder1,uint8 motor2Encoder0,uint8 motor2Encoder2);
+void motorCtrlCfg(volatile uint8 *motorDDR, volatile uint8 *motorPort, uint8 motorSentido1, uint8 motorPWM1, uint8 motorSentido2, uint8 motorPWM2);
+void motorDataCfg(volatile uint8 *motorDDR, volatile uint8 *motorPort,uint8 motor1Encoder0,uint8 motor1Encoder1,uint8 motor2Encoder0,uint8 motor2Encoder2);
 
 
 

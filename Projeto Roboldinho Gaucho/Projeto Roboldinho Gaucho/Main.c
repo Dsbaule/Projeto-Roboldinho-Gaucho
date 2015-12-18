@@ -10,6 +10,10 @@
 #include "PL/LS/LS_ATmega328.h"
 #include "PL/LS/LS_HD44780.h"
 
+// Inclusão das Bibliotecas do ATMEGA
+#include <avr/io.h>
+#include <util/delay.h>
+
 // Inclusão das Bibliotecas do Projeto
 #include "PL/Motor.h"
 
@@ -36,6 +40,8 @@
 #define	MOTOR_CONTROL_PORT	PORTD
 #define	MOTOR_CONTROL_PIN	PIND
 
+#define MOTOR1_CONTROL_SENTIDO_PIN	PD3
+#define MOTOR2_CONTROL_SENTIDO_PIN	PD4
 #define MOTOR1_CONTROL_PWM_PIN	PD5
 #define MOTOR2_CONTROL_PWM_PIN	PD6
 
@@ -49,56 +55,94 @@
 #define MOTOR2_DATA_E1_PIN	PC4
 
 // Definições Gerais
+#define ADC_ADC4	0
+#define ADC_ADC5	1
 
 // Definição das Variaveis Globais
 struct motorInfo motor1Info;
 struct motorInfo motor2Info;
 
-ISR(TIMER0_COMPA_vect);
-ISR(TIMER0_COMPB_vect);
-ISR(TIMER0_OVF_vect);
+volatile uint8 curADC = ADC_ADC4;
+
+//Variáveis para leitura dos potenciometros TESTE
+volatile int VelocidadeX = 0;
+volatile int VelocidadeY = 0;
+
+ISR(ADC_vect);
 
 int main(void)
 {
-	// Configuração dos motores
-	motorCtrlCfg(MOTOR_CONTROL_DDR, MOTOR_CONTROL_PORT, MOTOR1_CONTROL_PWM_PIN, MOTOR2_CONTROL_PWM_PIN);
-	motorDataCfg(MOTOR_CONTROL_DDR, MOTOR_CONTROL_PORT, MOTOR1_DATA_E0_PIN, MOTOR1_DATA_E1_PIN, MOTOR2_DATA_E0_PIN, MOTOR2_DATA_E1_PIN);
+	//EU QUE FIZ AE AE
+	usartEnableTransmitter();
+	usartStdio();
+	usartInit(9600);
 	
-	// Configuração do Timer0 - 1kHz
+	// Configuração dos motores
+	motorCtrlCfg(&MOTOR_CONTROL_DDR, &MOTOR_CONTROL_PORT, MOTOR1_CONTROL_SENTIDO_PIN, MOTOR1_CONTROL_PWM_PIN, MOTOR2_CONTROL_SENTIDO_PIN, MOTOR2_CONTROL_PWM_PIN);
+	motorDataCfg(&MOTOR_DATA_DDR, &MOTOR_DATA_PORT, MOTOR1_DATA_E0_PIN, MOTOR1_DATA_E1_PIN, MOTOR2_DATA_E0_PIN, MOTOR2_DATA_E1_PIN);
+	
+	// Configuração do Timer0 - ~1kHz
 	timer0FastPWMMaxMode();
-	timer0ClockPrescaller8();
+	timer0ClockPrescaller64();
 	timer0OC0ANonInvertedMode();
 	timer0OC0BNonInvertedMode();
-	timer0SetCompareAValue(127);
-	timer0SetCompareBValue(127);
+	timer0SetCompareAValue(1);
+	timer0SetCompareBValue(1);
 	timer0ActivateCompareAInterrupt();
 	timer0ActivateCompareBInterrupt();
 	timer0ActivateOverflowInterrupt();
 	
+	//ADC CONFIG
+	adcReferenceAvcc();
+	adcClockPrescaler128();
+	adcEnableAutomaticMode();
+	adcTriggerTimer1Overflow();
+	adcSelectChannel(ADC4);
+	adcActivateInterrupt();
+	adcEnable();
+	
+	clrBit(DDRC, PC4);
+	clrBit(DDRC, PC5);
+	clrBit(PORTC, PC4);
+	clrBit(PORTC, PC5);
+	
 	// Configuração do Timer1
+	timer1CTCMode();
+	timer1ClockPrescaller1024();
+	timer1SetCompareAValue(135);
+	timer1DeactivateCompareAInterrupt();
 	
 	// Configuração do Timer2
 	
 	sei();
 	
+	setBit(MOTOR_CONTROL_PORT, MOTOR1_CONTROL_SENTIDO_PIN);
+	
     while(1)
     {
-		
+		//_delay_ms(1);
+		timer0SetCompareAValue(127);
+		timer0SetCompareBValue(127);
+		cli();
+		printf("VelocidadeX = %d    -    VelocidadeY = %d\r", VelocidadeX, VelocidadeY);
+		sei();
     }
 }
 
-
-ISR(TIMER0_COMPA_vect)
+ISR(ADC_vect)
 {
-	
+	VelocidadeX++;
+	if(curADC == ADC_ADC4)
+	{
+		VelocidadeX = ADC;
+		adcSelectChannel(ADC5);
+		curADC = ADC_ADC5;
+	}
+	else if(curADC == ADC_ADC5)
+	{
+		VelocidadeX = ADC;	
+		adcSelectChannel(ADC4);
+		curADC = ADC_ADC4;
+	}
 }
 
-ISR(TIMER0_COMPB_vect)
-{
-	
-}
-
-ISR(TIMER0_OVF_vect)
-{
-	
-}
