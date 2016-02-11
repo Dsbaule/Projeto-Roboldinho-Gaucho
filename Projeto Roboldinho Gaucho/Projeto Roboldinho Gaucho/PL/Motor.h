@@ -14,6 +14,26 @@
 #include "LS/LS_ATmega328.h"
 
 
+// Definições para os Motores
+#define	MOTOR_CONTROL_DDR	DDRD
+#define	MOTOR_CONTROL_PORT	PORTD
+#define	MOTOR_CONTROL_PIN	PIND
+
+#define MOTOR1_CONTROL_SENTIDO_PIN	PD3
+#define MOTOR2_CONTROL_SENTIDO_PIN	PD4
+#define MOTOR1_CONTROL_PWM_PIN	PD5
+#define MOTOR2_CONTROL_PWM_PIN	PD6
+
+#define	MOTOR_DATA_DDR	DDRC
+#define	MOTOR_DATA_PORT	PORTC
+#define	MOTOR_DATA_PIN	PINC
+
+#define MOTOR1_DATA_E0_PIN	PC0
+#define MOTOR1_DATA_E1_PIN	PC1
+#define MOTOR2_DATA_E0_PIN	PC2
+#define MOTOR2_DATA_E1_PIN	PC4
+
+
 typedef struct motorInfo
 {
 	uint16	anguloAtual;
@@ -24,12 +44,28 @@ typedef struct motorInfo
 	uint8	enc1Atual;
 	
 	uint8	direcao;
-	uint8	velocidade;		
+	uint8	velocidade;
+
+	unsigned long timeSinceRead;
 }motorInfo;
 
-void motorCtrlCfg(volatile uint8 *motorDDR, volatile uint8 *motorPort, uint8 motorSentido1, uint8 motorPWM1, uint8 motorSentido2, uint8 motorPWM2);
-void motorDataCfg(volatile uint8 *motorDDR, volatile uint8 *motorPort,uint8 motor1Encoder0,uint8 motor1Encoder1,uint8 motor2Encoder0,uint8 motor2Encoder2);
+struct motorInfo motor1Info;
+struct motorInfo motor2Info;
 
+unsigned long timeSinceStart;
 
+// FUNÇÕES
+
+void motorCfg();
+void motorCtrlCfg();
+void motorDataCfg();
+
+void setMotor1Speed(int Speed);
+void setMotor2Speed(int Speed);
+
+void calcSpeedMotor1();
+void calcSpeedMotor2();
+
+ISR(PCINT1_vect);
 
 #endif /* INCFILE1_H_ */

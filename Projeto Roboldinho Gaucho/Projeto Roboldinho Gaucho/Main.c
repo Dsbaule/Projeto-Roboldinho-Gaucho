@@ -35,24 +35,6 @@
 #define RF24_MISO_PIN	PB4
 #define RF24_CLK_PIN	PB5
 
-// Definições para os Motores
-#define	MOTOR_CONTROL_DDR	DDRD
-#define	MOTOR_CONTROL_PORT	PORTD
-#define	MOTOR_CONTROL_PIN	PIND
-
-#define MOTOR1_CONTROL_SENTIDO_PIN	PD3
-#define MOTOR2_CONTROL_SENTIDO_PIN	PD4
-#define MOTOR1_CONTROL_PWM_PIN	PD5
-#define MOTOR2_CONTROL_PWM_PIN	PD6
-
-#define	MOTOR_DATA_DDR	DDRC
-#define	MOTOR_DATA_PORT	PORTC
-#define	MOTOR_DATA_PIN	PINC
-
-#define MOTOR1_DATA_E0_PIN	PC0
-#define MOTOR1_DATA_E1_PIN	PC1
-#define MOTOR2_DATA_E0_PIN	PC2
-#define MOTOR2_DATA_E1_PIN	PC4
 
 // Definições Gerais
 #define ADC_ADC4	0
@@ -73,24 +55,12 @@ ISR(ADC_vect);
 int main(void)
 {
 	//EU QUE FIZ AE AE
-	usartEnableTransmitter();
-	usartStdio();
-	usartInit(9600);
+	//usartEnableTransmitter();
+	//usartStdio();
+	//usartInit(9600);
 	
 	// Configuração dos motores
-	motorCtrlCfg(&MOTOR_CONTROL_DDR, &MOTOR_CONTROL_PORT, MOTOR1_CONTROL_SENTIDO_PIN, MOTOR1_CONTROL_PWM_PIN, MOTOR2_CONTROL_SENTIDO_PIN, MOTOR2_CONTROL_PWM_PIN);
-	motorDataCfg(&MOTOR_DATA_DDR, &MOTOR_DATA_PORT, MOTOR1_DATA_E0_PIN, MOTOR1_DATA_E1_PIN, MOTOR2_DATA_E0_PIN, MOTOR2_DATA_E1_PIN);
-	
-	// Configuração do Timer0 - ~1kHz
-	timer0FastPWMMaxMode();
-	timer0ClockPrescaller64();
-	timer0OC0ANonInvertedMode();
-	timer0OC0BNonInvertedMode();
-	timer0SetCompareAValue(1);
-	timer0SetCompareBValue(1);
-	timer0ActivateCompareAInterrupt();
-	timer0ActivateCompareBInterrupt();
-	timer0ActivateOverflowInterrupt();
+	motorCfg();
 	
 	//ADC CONFIG
 	adcReferenceAvcc();
@@ -121,11 +91,13 @@ int main(void)
     while(1)
     {
 		//_delay_ms(1);
-		timer0SetCompareAValue(127);
-		timer0SetCompareBValue(127);
+		setMotor1Speed(0);
+		setMotor2Speed(0);
+		/*
 		cli();
 		printf("VelocidadeX = %d    -    VelocidadeY = %d\r", VelocidadeX, VelocidadeY);
 		sei();
+		*/
     }
 }
 
