@@ -52,7 +52,7 @@ typedef struct motorInfo
 struct motorInfo motor1Info;
 struct motorInfo motor2Info;
 
-unsigned long timeSinceStart;
+volatile int timeSinceStart;
 
 // FUNÇÕES
 
@@ -67,5 +67,6 @@ void calcSpeedMotor1();
 void calcSpeedMotor2();
 
 ISR(PCINT1_vect);
+ISR(TIMER0_OVF_vect);
 
 #endif /* INCFILE1_H_ */

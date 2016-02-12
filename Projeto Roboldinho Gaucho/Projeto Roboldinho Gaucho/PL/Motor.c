@@ -20,11 +20,12 @@ void motorCfg()
 	timer0OC0BNonInvertedMode();
 	timer0SetCompareAValue(0);
 	timer0SetCompareBValue(0);
-	timer0ActivateCompareAInterrupt();
-	timer0ActivateCompareBInterrupt();
+	timer0DeactivateCompareAInterrupt();
+	timer0DeactivateCompareBInterrupt();
 	timer0ActivateOverflowInterrupt();
 	
-	timeSinceStart = 0;
+	
+	//timeSinceStart = 0;
 	motor1Info.timeSinceRead = 0;
 	motor2Info.timeSinceRead = 0;
 	
@@ -134,7 +135,8 @@ ISR(PCINT1_vect)
 	}
 }
 
+
 ISR(TIMER0_OVF_vect)
 {
-	timeSinceStart += 1.024;
+	timeSinceStart++;
 }

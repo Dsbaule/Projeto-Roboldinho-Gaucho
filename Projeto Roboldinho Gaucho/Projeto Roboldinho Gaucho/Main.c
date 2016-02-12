@@ -13,6 +13,7 @@
 // Inclusão das Bibliotecas do ATMEGA
 #include <avr/io.h>
 #include <util/delay.h>
+#include <util/atomic.h>
 
 // Inclusão das Bibliotecas do Projeto
 #include "PL/Motor.h"
@@ -50,14 +51,16 @@ volatile uint8 curADC = ADC_ADC4;
 volatile int VelocidadeX = 0;
 volatile int VelocidadeY = 0;
 
+int speed = 0;
+
 ISR(ADC_vect);
 
 int main(void)
 {
 	//EU QUE FIZ AE AE
-	//usartEnableTransmitter();
-	//usartStdio();
-	//usartInit(9600);
+	usartEnableTransmitter();
+	usartStdio();
+	usartInit(9600);
 	
 	// Configuração dos motores
 	motorCfg();
@@ -71,33 +74,35 @@ int main(void)
 	adcActivateInterrupt();
 	adcEnable();
 	
-	clrBit(DDRC, PC4);
-	clrBit(DDRC, PC5);
-	clrBit(PORTC, PC4);
-	clrBit(PORTC, PC5);
+	adcDisableAutomaticMode();
+	adcDeactivateInterrupt();
+	adcDisable();
 	
 	// Configuração do Timer1
 	timer1CTCMode();
 	timer1ClockPrescaller1024();
 	timer1SetCompareAValue(135);
 	timer1DeactivateCompareAInterrupt();
+	timer1ActivateOverflowInterrupt();
+	
+	timer1DeactivateOverflowInterrupt();
 	
 	// Configuração do Timer2
 	
 	sei();
 	
-	setBit(MOTOR_CONTROL_PORT, MOTOR1_CONTROL_SENTIDO_PIN);
-	
     while(1)
-    {
+	{
 		//_delay_ms(1);
-		setMotor1Speed(0);
-		setMotor2Speed(0);
+		setMotor1Speed(30);
+		
 		/*
-		cli();
-		printf("VelocidadeX = %d    -    VelocidadeY = %d\r", VelocidadeX, VelocidadeY);
-		sei();
+		ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+		{
+			printf("Velocidade1 = %d    -    Velocidade2 = %d   -   %d\r", motor1Info.direcao, motor2Info.direcao, timeSinceStart);
+		}
 		*/
+		
     }
 }
 
@@ -116,5 +121,10 @@ ISR(ADC_vect)
 		adcSelectChannel(ADC4);
 		curADC = ADC_ADC4;
 	}
+	
+	printf("FUDEU FUDEU FUDEU \r");
+	
+	timer1ClearOverflowInterruptRequest();
+	adcClearInterruptRequest();
 }
 
