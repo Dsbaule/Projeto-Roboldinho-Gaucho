@@ -17,6 +17,7 @@
 
 // Inclusão das Bibliotecas do Projeto
 #include "PL/Motor.h"
+#include "PL/LightSensor.h"
 
 // Definições para o HC-SR04
 #define	HCSR04_DDR	DDRD
@@ -64,48 +65,38 @@ int main(void)
 	usartStdio();
 	usartInit(9600);
 	
-	// Configuração do Timer1	
-	timer1CTCMode();
-	timer1ClockPrescaller1024();
-	timer1SetCompareAValue(124);
-	timer1SetCompareBValue(124);
-	timer1DeactivateOverflowInterrupt();
-	timer1DeactivateCompareAInterrupt();
-	timer1DeactivateCompareBInterrupt();
-	
-	// Configuração do ADC
-	adcReferenceInternal();
-	adcClockPrescaler128();
-	adcEnableAutomaticMode();
-	adcTriggerTimer1CompareMatchB();
-	adcSelectChannel(ADC5);
-	adcActivateInterrupt();
-	adcResultLeftAdjust();
-	adcEnable();
-	
-	// Configuração do Timer2
-	
 	// Configuração das Interrupções
 	sei();
 	
 	// Configuração dos motores
 	motorCfg();
 	
+	// Configuração do sensor de luz
+	lightSensorCfg();
+	
     while(1)
 	{
 		
+		while(getLightSensorColor() == 0)
+		{
+			setMotor1Speed(50);
+			setMotor2Speed(-50);
+			printf("Cor: %d - %d\n", getLightSensorColor(), getLightSensorValue());
+			_delay_ms(100);
+		}
+		while(getLightSensorColor() == 1)
+		{
+			setMotor1Speed(255);
+			setMotor2Speed(255);
+			printf("Cor: %d - %d\n", getLightSensorColor(), getLightSensorValue());
+			_delay_ms(100);
+		}
+		
+		
+		/*
 		_delay_ms(100);
 		setMotor1Speed(30);
-		printf("Cor = %d\n", Color);
+		printf("Cor = %d\n", getLightSensorColor());
+		*/
     }
 }
-
-ISR(ADC_vect)
-{
-	Color = ADC;
-	
-	//timer1ClearOverflowInterruptRequest();
-	timer1ClearCompareBInterruptRequest();
-	adcClearInterruptRequest();
-}
-

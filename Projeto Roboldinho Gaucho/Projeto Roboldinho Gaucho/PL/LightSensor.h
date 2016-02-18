@@ -15,10 +15,14 @@
 
 #define LIGHT_SENSOR_PIN ADC5
 
+#define LIGHT_SENSOR_BORDER 1100
+
 int LightSensorValue;
 
 void lightSensorCfg();
-void getLightSensorValue();
+int getLightSensorValue();
+int getLightSensorColor();
 
+ISR(ADC_vect);
 
 #endif /* LIGHTSENSOR_H_ */
