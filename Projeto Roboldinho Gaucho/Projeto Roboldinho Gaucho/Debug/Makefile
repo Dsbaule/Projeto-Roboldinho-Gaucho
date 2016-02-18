@@ -40,6 +40,7 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../Main.c \
+../PL/LightSensor.c \
 ../PL/LS/LS_ATmega328.c \
 ../PL/LS/LS_HD44780.c \
 ../PL/Motor.c
@@ -53,24 +54,28 @@ ASM_SRCS +=
 
 OBJS +=  \
 Main.o \
+PL/LightSensor.o \
 PL/LS/LS_ATmega328.o \
 PL/LS/LS_HD44780.o \
 PL/Motor.o
 
 OBJS_AS_ARGS +=  \
 Main.o \
+PL/LightSensor.o \
 PL/LS/LS_ATmega328.o \
 PL/LS/LS_HD44780.o \
 PL/Motor.o
 
 C_DEPS +=  \
 Main.d \
+PL/LightSensor.d \
 PL/LS/LS_ATmega328.d \
 PL/LS/LS_HD44780.d \
 PL/Motor.d
 
 C_DEPS_AS_ARGS +=  \
 Main.d \
+PL/LightSensor.d \
 PL/LS/LS_ATmega328.d \
 PL/LS/LS_HD44780.d \
 PL/Motor.d
@@ -90,6 +95,13 @@ LINKER_SCRIPT_DEP+=
 
 # AVR32/GNU C Compiler
 ./Main.o: .././Main.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+PL/LightSensor.o: ../PL/LightSensor.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -125,14 +137,14 @@ PL/Motor.o: ../PL/Motor.c
 	@echo Finished building: $<
 	
 
-PL/LS/%.o: ../PL/LS/%.c
+PL/%.o: ../PL/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
 	@echo Finished building: $<
 	
 
-PL/%.o: ../PL/%.c
+PL/LS/%.o: ../PL/LS/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

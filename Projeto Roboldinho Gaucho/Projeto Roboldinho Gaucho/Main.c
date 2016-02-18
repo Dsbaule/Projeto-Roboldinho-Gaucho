@@ -38,18 +38,20 @@
 
 
 // Definições Gerais
-#define ADC_ADC4	0
-#define ADC_ADC5	1
+//#define ADC_ADC4	0
+//#define ADC_ADC5	1
 
 // Definição das Variaveis Globais
 struct motorInfo motor1Info;
 struct motorInfo motor2Info;
 
-volatile uint8 curADC = ADC_ADC4;
+//volatile uint8 curADC = ADC_ADC4;
 
 //Variáveis para leitura dos potenciometros TESTE
 volatile int VelocidadeX = 0;
 volatile int VelocidadeY = 0;
+volatile int Color = 0;
+
 
 int speed = 0;
 
@@ -57,74 +59,53 @@ ISR(ADC_vect);
 
 int main(void)
 {
-	//EU QUE FIZ AE AE
+	// Configuração da comunicação USART
 	usartEnableTransmitter();
 	usartStdio();
 	usartInit(9600);
 	
-	// Configuração dos motores
-	motorCfg();
-	
-	//ADC CONFIG
-	adcReferenceAvcc();
-	adcClockPrescaler128();
-	adcEnableAutomaticMode();
-	adcTriggerTimer1Overflow();
-	adcSelectChannel(ADC4);
-	adcActivateInterrupt();
-	adcEnable();
-	
-	adcDisableAutomaticMode();
-	adcDeactivateInterrupt();
-	adcDisable();
-	
-	// Configuração do Timer1
+	// Configuração do Timer1	
 	timer1CTCMode();
 	timer1ClockPrescaller1024();
-	timer1SetCompareAValue(135);
-	timer1DeactivateCompareAInterrupt();
-	timer1ActivateOverflowInterrupt();
-	
+	timer1SetCompareAValue(124);
+	timer1SetCompareBValue(124);
 	timer1DeactivateOverflowInterrupt();
+	timer1DeactivateCompareAInterrupt();
+	timer1DeactivateCompareBInterrupt();
+	
+	// Configuração do ADC
+	adcReferenceInternal();
+	adcClockPrescaler128();
+	adcEnableAutomaticMode();
+	adcTriggerTimer1CompareMatchB();
+	adcSelectChannel(ADC5);
+	adcActivateInterrupt();
+	adcResultLeftAdjust();
+	adcEnable();
 	
 	// Configuração do Timer2
 	
+	// Configuração das Interrupções
 	sei();
+	
+	// Configuração dos motores
+	motorCfg();
 	
     while(1)
 	{
-		//_delay_ms(1);
+		
+		_delay_ms(100);
 		setMotor1Speed(30);
-		
-		/*
-		ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
-		{
-			printf("Velocidade1 = %d    -    Velocidade2 = %d   -   %d\r", motor1Info.direcao, motor2Info.direcao, timeSinceStart);
-		}
-		*/
-		
+		printf("Cor = %d\n", Color);
     }
 }
 
 ISR(ADC_vect)
 {
-	VelocidadeX++;
-	if(curADC == ADC_ADC4)
-	{
-		VelocidadeX = ADC;
-		adcSelectChannel(ADC5);
-		curADC = ADC_ADC5;
-	}
-	else if(curADC == ADC_ADC5)
-	{
-		VelocidadeX = ADC;	
-		adcSelectChannel(ADC4);
-		curADC = ADC_ADC4;
-	}
+	Color = ADC;
 	
-	printf("FUDEU FUDEU FUDEU \r");
-	
-	timer1ClearOverflowInterruptRequest();
+	//timer1ClearOverflowInterruptRequest();
+	timer1ClearCompareBInterruptRequest();
 	adcClearInterruptRequest();
 }
 

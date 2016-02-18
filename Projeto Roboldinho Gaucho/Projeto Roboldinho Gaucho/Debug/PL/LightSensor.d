@@ -1,4 +1,5 @@
-PL/Motor.d PL/Motor.o: ../PL/Motor.c ../PL/Motor.h ../PL/LS/LS_defines.h \
+PL/LightSensor.d PL/LightSensor.o: ../PL/LightSensor.c \
+ ../PL/LightSensor.h ../PL/LS/LS_defines.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\inttypes.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdint.h \
@@ -20,7 +21,7 @@ PL/Motor.d PL/Motor.o: ../PL/Motor.c ../PL/Motor.h ../PL/LS/LS_defines.h \
  ../PL/LS/LS_ATmega328.h ../PL/LS/LS_defines.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\atomic.h
 
-../PL/Motor.h:
+../PL/LightSensor.h:
 
 ../PL/LS/LS_defines.h:
 

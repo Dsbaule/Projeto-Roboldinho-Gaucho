@@ -4,6 +4,8 @@
 
 Main.c
 
+PL\LightSensor.c
+
 PL\LS\LS_ATmega328.c
 
 PL\LS\LS_HD44780.c

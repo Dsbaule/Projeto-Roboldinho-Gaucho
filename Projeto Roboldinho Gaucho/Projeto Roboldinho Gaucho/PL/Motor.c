@@ -58,6 +58,10 @@ void motorDataCfg()
 	clrBit(MOTOR_DATA_PORT, MOTOR1_DATA_E1_PIN);
 	clrBit(MOTOR_DATA_PORT, MOTOR2_DATA_E0_PIN);
 	clrBit(MOTOR_DATA_PORT, MOTOR2_DATA_E1_PIN);
+	
+	pcint14_8Enable();
+	pcint8ActivateInterrupt();
+	pcint9ActivateInterrupt();
 }
 
 void setMotor1Speed(int Speed)
@@ -91,13 +95,24 @@ void setMotor2Speed(int Speed)
 }
 
 void calcSpeedMotor1()
-{		
+{	
+	motor1Info.velocidade = 60000/(motor1Info.timeSinceRead * 360.0);
 	
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		//printf("%d %d     -     %d     -     %d\n", motor1Info.enc1Atual, motor1Info.enc0Atual, motor1Info.velocidade, motor1Info.timeSinceRead);
+		//printf("Encoder 1: %d %d     -    Sentido: %d   -   %d\n", motor1Info.enc1Atual, motor1Info.enc0Atual, motor2Info.direcao, timeSinceStart);
+	}
+	
+	
+	motor1Info.timeSinceRead = 0;	
 }
 
 void calcSpeedMotor2()
 {
+	motor2Info.velocidade = 60000/(motor2Info.timeSinceRead * 360);
 	
+	motor2Info.timeSinceRead = 0;
 }
 
 ISR(PCINT1_vect)
@@ -139,4 +154,6 @@ ISR(PCINT1_vect)
 ISR(TIMER0_OVF_vect)
 {
 	timeSinceStart++;
+	motor1Info.timeSinceRead++;
+	motor2Info.timeSinceRead++;
 }

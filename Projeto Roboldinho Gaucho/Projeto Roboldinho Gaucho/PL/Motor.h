@@ -12,6 +12,7 @@
 
 #include "LS/LS_defines.h"
 #include "LS/LS_ATmega328.h"
+#include <util/atomic.h>
 
 
 // Definições para os Motores
@@ -44,7 +45,7 @@ typedef struct motorInfo
 	uint8	enc1Atual;
 	
 	uint8	direcao;
-	uint8	velocidade;
+	uint16	velocidade;
 
 	unsigned long timeSinceRead;
 }motorInfo;
@@ -52,7 +53,7 @@ typedef struct motorInfo
 struct motorInfo motor1Info;
 struct motorInfo motor2Info;
 
-volatile int timeSinceStart;
+volatile uint64 timeSinceStart;
 
 // FUNÇÕES
 
